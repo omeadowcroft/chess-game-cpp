@@ -26,7 +26,8 @@ int main(){
 /*  int squareSize = boardSize // 8
  *  for range 8 (rows)
  *  for range 8 (columns)
- *  draw sqare and choose colour based off row and col sum % 2 == 0
+ *  choose colour based off row and col
+ *  draw sqare at start + [columns*size,rows*size]
 */
 
     float squareSize = boardSize/8.f;
