@@ -1,19 +1,22 @@
-Welcome! This is my chess app written in C++ using SFML.
+# Chess Game
 
-How to build:
+A chess game written in C++ using SFML.
 
-run the command: make
+## Dependencies
+- SFML
+- A C++ compiler
 
-How to run:
-
-./chess
-
-How to rebuild:
-
-make clean
+## Build
+```
 make
+```
 
-Dependencies:
+## Run
+```
+./chess
+```
 
-SFML
-A C++ compiler
+## Rebuild from scratch
+```
+make clean && make
+```
