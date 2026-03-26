@@ -1,3 +1,5 @@
+#pragma once
+
 char colToFile(int col);
 int fileToCol(char file);
 int rowToRank(int row);

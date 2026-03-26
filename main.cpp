@@ -1,9 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "board.h"
+#include "renderer.h"
 
 int main(){
 
   sf::RenderWindow window(sf::VideoMode({800u, 600u}), "Chess Window");
+
+  loadTextures();
 
   while (window.isOpen()) {
     while (const std::optional event = window.pollEvent()) {
@@ -41,6 +44,8 @@ int main(){
         window.draw(square);
       }
     }
+
+    renderBoard(window, board, squareSize, boardStartX, boardStartY);
 
     window.display();
   }
