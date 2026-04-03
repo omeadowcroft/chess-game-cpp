@@ -1,14 +1,20 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector>
+#include <utility>
 #include "board.h"
 #include "renderer.h"
 #include "coordinates.h"
+#include "moves.h"
 
 int main(){
 
   sf::RenderWindow window(sf::VideoMode({800u, 600u}), "Chess Window");
 
   loadTextures();
+
+  int selectedRow = -1, selectedCol = -1;
+  std::vector<std::pair<int,int>> legalMoves;
 
   while (window.isOpen()) {
     int windowWidth = window.getSize().x;
@@ -29,7 +35,26 @@ int main(){
           int row = (click->position.y - boardStartY) / squareSize;
 
           if (col >= 0 && col < 8 && row >= 0 && row < 8) {
-            std::cout << colToFile(col) << rowToRank(row) << std::endl;
+            bool isLegalMove = false;
+            for (auto& [r, c] : legalMoves) {
+              if (r == row && c == col) { isLegalMove = true; break; }
+            }
+
+            if (isLegalMove) {
+              board[row][col] = board[selectedRow][selectedCol];
+              board[selectedRow][selectedCol] = {pieceType::none, colour::white};
+              selectedRow = -1; selectedCol = -1;
+              legalMoves.clear();
+            } else if (board[row][col].type != pieceType::none) {
+              selectedRow = row; selectedCol = col;
+              legalMoves = getLegalMoves(board, row, col);
+            } else {
+              selectedRow = -1; selectedCol = -1;
+              legalMoves.clear();
+            }
+          } else {
+            selectedRow = -1; selectedCol = -1;
+            legalMoves.clear();
           }
         }
       }
@@ -54,6 +79,18 @@ int main(){
         square.setPosition({(float)boardStartX+(col*squareSize),(float)boardStartY+(row*squareSize)});
         window.draw(square);
       }
+    }
+
+    sf::RectangleShape highlight({squareSize, squareSize});
+    if (selectedRow != -1) {
+      highlight.setFillColor(sf::Color(210, 160, 40, 200));
+      highlight.setPosition({boardStartX + selectedCol * squareSize, boardStartY + selectedRow * squareSize});
+      window.draw(highlight);
+    }
+    highlight.setFillColor(sf::Color(210, 160, 40, 100));
+    for (auto& [r, c] : legalMoves) {
+      highlight.setPosition({boardStartX + c * squareSize, boardStartY + r * squareSize});
+      window.draw(highlight);
     }
 
     renderBoard(window, board, squareSize, boardStartX, boardStartY);
